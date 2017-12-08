@@ -180,6 +180,8 @@ public class TraceOverviewInputController extends AbstractTableInputController i
 	 */
 	private ResultComparator<AbstractSpan> resultComparator = defaultComparator;
 
+	private boolean filterStaticResources;
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -223,6 +225,7 @@ public class TraceOverviewInputController extends AbstractTableInputController i
 		preferences.add(PreferenceId.ITEMCOUNT);
 		preferences.add(PreferenceId.TIME_RESOLUTION);
 		preferences.add(PreferenceId.TIMELINE);
+		preferences.add(PreferenceId.FILTER_STATIC_RESOURCES);
 		return preferences;
 	}
 
@@ -250,6 +253,13 @@ public class TraceOverviewInputController extends AbstractTableInputController i
 				timeDecimalPlaces = (Integer) preferenceEvent.getPreferenceMap().get(PreferenceId.TimeResolution.TIME_DECIMAL_PLACES_ID);
 			}
 			break;
+		case FILTER_STATIC_RESOURCES:
+			if (preferenceEvent.getPreferenceMap().containsKey(PreferenceId.FilterStaticResources.BUTTON_FILTER_STATIC_RESOURCES)) {
+				filterStaticResources = (Boolean) preferenceEvent.getPreferenceMap().get(PreferenceId.FilterStaticResources.BUTTON_FILTER_STATIC_RESOURCES);
+				loadDataFromService();
+			}
+			break;
+
 		default:
 			break;
 		}
@@ -304,6 +314,23 @@ public class TraceOverviewInputController extends AbstractTableInputController i
 		if (CollectionUtils.isNotEmpty(spans)) {
 			spanList.addAll(spans);
 		}
+
+		if (filterStaticResources) {
+			spanList = filterStaticResources(spanList);
+		}
+
+	}
+
+	private Collection<Span> filterStaticResources(Collection<? extends Span> spans) {
+		Collection<Span> filteredSpans = new ArrayList<Span>();
+		for (Span span : spans) {
+			if (span.getTags().containsKey("http.url")) {
+				if (!span.getTags().get("http.url").matches(".{0,}(.css|.js|http://172.17.0.1:8182/rest/api/v2/spans|.jpg|.html|.png)")) {
+					filteredSpans.add(span);
+				}
+			}
+		}
+		return filteredSpans;
 
 	}
 

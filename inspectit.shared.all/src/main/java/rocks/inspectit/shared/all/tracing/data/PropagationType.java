@@ -27,7 +27,12 @@ public enum PropagationType {
 	/**
 	 * Propagation via Javascript calls or callbacks.
 	 */
-	JAVASCRIPT;
+	JAVASCRIPT,
+
+	/**
+	 * Propagation provided by Zipkin.
+	 */
+	ZIPKIN;
 
 	/**
 	 * Returns result of {@link #valueOf(String)} if the given parameter is not <code>null</code>.

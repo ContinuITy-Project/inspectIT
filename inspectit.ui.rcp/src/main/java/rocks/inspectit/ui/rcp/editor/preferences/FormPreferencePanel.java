@@ -46,6 +46,7 @@ import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.AbstractPlotDataSolve
 import rocks.inspectit.ui.rcp.editor.graph.plot.datasolver.PlotDataSolver;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
+import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.FilterStaticResources;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.LiveMode;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId.TimeResolution;
 import rocks.inspectit.ui.rcp.editor.preferences.control.IPreferenceControl;
@@ -83,6 +84,11 @@ public class FormPreferencePanel implements IPreferencePanel {
 	 * The button for live mode switching.
 	 */
 	private Action switchLiveMode;
+
+	/**
+	 * The button for filter static resources switching.
+	 */
+	private Action switchFilterStaticResources;
 
 	/**
 	 * The button for switching the preferences.
@@ -269,6 +275,7 @@ public class FormPreferencePanel implements IPreferencePanel {
 	 */
 	private void createButtons(Set<PreferenceId> preferenceSet, IToolBarManager toolBarManager, InputDefinition inputDefinition) {
 		switchLiveMode = new SwitchLiveMode("Live");
+		switchFilterStaticResources = new SwitchFilterStaticResources("Filter static resources and requests to the zipkin endpoint");
 		switchPreferences = new SwitchPreferences("Additional options"); // NOPMD
 		MenuAction menuAction = new MenuAction();
 		menuAction.setImageDescriptor(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_TOOL));
@@ -318,6 +325,11 @@ public class FormPreferencePanel implements IPreferencePanel {
 			refreshMenuManager.add(new SetRefreshRateAction("60 (s)", 60000, currentRefreshRate));
 			menuAction.addContributionItem(refreshMenuManager);
 		}
+
+		if (preferenceSet.contains(PreferenceId.FILTER_STATIC_RESOURCES)) {
+			toolBarManager.add(switchFilterStaticResources);
+		}
+
 		if (preferenceSet.contains(PreferenceId.UPDATE)) {
 			toolBarManager.add(new UpdateAction("Update")); // NOPMD
 		}
@@ -552,6 +564,34 @@ public class FormPreferencePanel implements IPreferencePanel {
 	}
 
 	/**
+	 * Switches the filter static resources mode.
+	 *
+	 * @author Tobias Angerstein
+	 *
+	 */
+	private final class SwitchFilterStaticResources extends Action {
+
+		/**
+		 * Switches the Filter Static Resources.
+		 *
+		 * @param text
+		 *            The text.
+		 */
+		public SwitchFilterStaticResources(String text) {
+			super(text);
+			setImageDescriptor(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_FILTER));
+			setChecked(FilterStaticResources.ACTIVE_DEFAULT);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void run() {
+			createFilterStaticResourcesEvent();
+		}
+	}
+	/**
 	 * Filters by the maximum number of elements shown.
 	 *
 	 * @author Stefan Siegl
@@ -777,6 +817,17 @@ public class FormPreferencePanel implements IPreferencePanel {
 		livePreference.put(PreferenceId.LiveMode.BUTTON_LIVE_ID, switchLiveMode.isChecked());
 		PreferenceEvent event = new PreferenceEvent(PreferenceId.LIVEMODE);
 		event.setPreferenceMap(livePreference);
+		fireEvent(event);
+	}
+
+	/**
+	 * Creates and fires a new filter static resources event.
+	 */
+	private void createFilterStaticResourcesEvent() {
+		Map<IPreferenceGroup, Object> filterStaticResourcesPreference = new HashMap<>();
+		filterStaticResourcesPreference.put(PreferenceId.FilterStaticResources.BUTTON_FILTER_STATIC_RESOURCES, switchFilterStaticResources.isChecked());
+		PreferenceEvent event = new PreferenceEvent(PreferenceId.FILTER_STATIC_RESOURCES);
+		event.setPreferenceMap(filterStaticResourcesPreference);
 		fireEvent(event);
 	}
 

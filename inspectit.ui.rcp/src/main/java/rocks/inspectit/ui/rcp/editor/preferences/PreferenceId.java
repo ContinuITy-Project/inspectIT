@@ -12,7 +12,7 @@ public enum PreferenceId {
 	/**
 	 * The identifiers of the different control groups.
 	 */
-	JMX_PLOTDATASOLVER, TIMELINE, SAMPLINGRATE, LIVEMODE, UPDATE, ITEMCOUNT, FILTERDATATYPE, INVOCFILTEREXCLUSIVETIME, INVOCFILTERTOTALTIME, CLEAR_BUFFER, STEPPABLE_CONTROL, TIME_RESOLUTION, HTTP_AGGREGATION_REQUESTMETHOD, HTTP_URI_TRANSFORMING, INVOCATION_SUBVIEW_MODE;
+	JMX_PLOTDATASOLVER, TIMELINE, SAMPLINGRATE, LIVEMODE, UPDATE, ITEMCOUNT, FILTERDATATYPE, INVOCFILTEREXCLUSIVETIME, INVOCFILTERTOTALTIME, CLEAR_BUFFER, STEPPABLE_CONTROL, TIME_RESOLUTION, HTTP_AGGREGATION_REQUESTMETHOD, HTTP_URI_TRANSFORMING, INVOCATION_SUBVIEW_MODE, FILTER_STATIC_RESOURCES;
 
 	/**
 	 * Inner enumeration for TIMELINE.
@@ -58,6 +58,24 @@ public enum PreferenceId {
 		 * The identifier for the live button.
 		 */
 		BUTTON_LIVE_ID, REFRESH_RATE;
+
+		/**
+		 * Defines if the live mode is active by default.
+		 */
+		public static final boolean ACTIVE_DEFAULT = false;
+	}
+
+	/**
+	 * Inner enumeration for FILTER_STATIC_RESOURCES.
+	 *
+	 * @author Eduard Tudenhoefner
+	 *
+	 */
+	public enum FilterStaticResources implements IPreferenceGroup {
+		/**
+		 * The identifier for the filter static resources button.
+		 */
+		BUTTON_FILTER_STATIC_RESOURCES;
 
 		/**
 		 * Defines if the live mode is active by default.

@@ -241,7 +241,8 @@ dependencies {
 		
 		'org.apache.commons:commons-email:1.4',
 		'javax.activation:activation:1.1.1',
-		'javax.mail:mail:1.4'
+		'javax.mail:mail:1.4',
+		'io.zipkin.java:zipkin-server:2.3.1'
 	)
 	
 	/** inspectit.server.diagnosis */

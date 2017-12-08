@@ -64,6 +64,10 @@ public abstract class AbstractPropagator<C> implements Propagator<C> {
 
 		injectBaggage(carrier, PropagationConstants.SPAN_ID, ConversionUtils.toHexString(spanContext.getId()));
 		injectBaggage(carrier, PropagationConstants.TRACE_ID, ConversionUtils.toHexString(spanContext.getTraceId()));
+		injectBaggage(carrier, PropagationConstants.PARENT_ID, ConversionUtils.toHexString(spanContext.getParentId()));
+		injectBaggage(carrier, PropagationConstants.SPAN_ID_LOW, ConversionUtils.toHexString(spanContext.getId()));
+		injectBaggage(carrier, PropagationConstants.TRACE_ID_LOW, ConversionUtils.toHexString(spanContext.getTraceId()));
+		injectBaggage(carrier, PropagationConstants.PARENT_ID_LOW, ConversionUtils.toHexString(spanContext.getParentId()));
 		Iterable<Entry<String, String>> baggageItems = spanContext.baggageItems();
 		if (null != baggageItems) {
 			for (Map.Entry<String, String> e : baggageItems) {
@@ -86,13 +90,16 @@ public abstract class AbstractPropagator<C> implements Propagator<C> {
 		Map<String, String> passedBaggage = new HashMap<String, String>();
 		String idFromBaggage = null;
 		String traceIdFromBaggage = null;
+		String parentIdFromBaggage = null;
 		// iterate over the baggage
 		for (Entry<String, String> e : iterable) {
 			String key = e.getKey();
-			if (PropagationConstants.SPAN_ID.equals(key)) {
+			if (PropagationConstants.SPAN_ID.toUpperCase().equals(key.toUpperCase())) {
 				idFromBaggage = e.getValue();
-			} else if (PropagationConstants.TRACE_ID.equals(key)) {
+			} else if (PropagationConstants.TRACE_ID.toUpperCase().equals(key.toUpperCase())) {
 				traceIdFromBaggage = e.getValue();
+			} else if (PropagationConstants.PARENT_ID.toUpperCase().equals(key.toUpperCase())) {
+				parentIdFromBaggage = e.getValue();
 			} else if (key.startsWith(PropagationConstants.INSPECTIT_BAGGAGE_PREFIX)) {
 				String realKey = key.substring(PropagationConstants.INSPECTIT_BAGGAGE_PREFIX.length());
 				passedBaggage.put(realKey, e.getValue());
@@ -104,6 +111,7 @@ public abstract class AbstractPropagator<C> implements Propagator<C> {
 			try {
 				long id = ConversionUtils.parseHexStringSafe(idFromBaggage);
 				long traceId = ConversionUtils.parseHexStringSafe(traceIdFromBaggage);
+				long parentId = ConversionUtils.parseHexStringSafe(parentIdFromBaggage);
 				return SpanContextImpl.buildExtractedContext(id, traceId, passedBaggage);
 			} catch (NumberFormatException e) {
 				if (LOGGER.isWarnEnabled()) {

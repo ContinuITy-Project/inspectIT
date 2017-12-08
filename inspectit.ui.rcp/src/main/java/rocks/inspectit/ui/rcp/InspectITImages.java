@@ -206,6 +206,7 @@ public interface InspectITImages {
 	String IMG_QUESTION_CIRCLE_FRAME = InspectITConstants.ICON_PATH_FUGUE + "question-frame.png";
 	String IMG_REMOTE = InspectITConstants.ICON_PATH_FUGUE + "servers-network.png";
 	String IMG_JMS = InspectITConstants.ICON_PATH_FUGUE + "envelope.png";
+	String IMG_ZIPKIN = InspectITConstants.ICON_PATH_FUGUE + "zipkin.png";
 	String IMG_REFERENCE_CHILDOF = InspectITConstants.ICON_PATH_FUGUE + "arrow-return-180.png";
 	String IMG_REFERENCE_FOLLOWSFROM = InspectITConstants.ICON_PATH_FUGUE + "arrow-curve-000-left.png";
 

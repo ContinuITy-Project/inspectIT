@@ -701,6 +701,9 @@ public final class ImageFormatter {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_ACTIVITY);
 		case JAVASCRIPT:
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_JAVASCRIPT);
+		case ZIPKIN:
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_ZIPKIN);
+
 		default:
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_REMOTE);
 		}
