@@ -14,12 +14,9 @@ import java.util.zip.GZIPInputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.concurrent.SettableListenableFuture;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,8 +39,6 @@ import zipkin2.codec.SpanBytesDecoder;
  */
 @Controller
 @RequestMapping(value = "/api")
-@CrossOrigin("${zipkin.query.allowed-origins:*}")
-@ConditionalOnProperty(name = "zipkin.collector.http.enabled", matchIfMissing = true)
 public class ZipkinHttpCollector {
 	/**
 	 * inspectIT buffer
@@ -107,7 +102,6 @@ public class ZipkinHttpCollector {
 	 * @return
 	 */
 	ResponseEntity<HttpStatus> validateAndStoreSpans(String encoding, byte[] body, InputType inputType) {
-		SettableListenableFuture<ResponseEntity<HttpStatus>> result = new SettableListenableFuture<ResponseEntity<HttpStatus>>();
 		if (encoding != null && encoding.contains("gzip")) {
 			try {
 				body = gunzip(body);
